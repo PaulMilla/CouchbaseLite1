@@ -24,10 +24,13 @@ namespace CouchbaseLite1
         {
             SetupLogger();
 
+/*
             var directoryPath = $"D:\\{Process.GetCurrentProcess().ProcessName}";
             manager = new Manager(
                 Directory.CreateDirectory(directoryPath),
                 ManagerOptions.Default);
+*/
+            manager = Manager.SharedInstance;
 
             db = manager.GetDatabase(DbName);
 
@@ -49,7 +52,7 @@ namespace CouchbaseLite1
 
             //Log.Level = Log.LogLevel.Debug;
             //Log.Domains.All.Level = Log.LogLevel.Debug;
-            Log.Domains.ChangeTracker.Level = Log.LogLevel.Debug;
+            Log.Domains.Router.Level = Log.LogLevel.Debug;
         }
 
         private static void HandleCommands(CancellationTokenSource shutdownTokenSource)
