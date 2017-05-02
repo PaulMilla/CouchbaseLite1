@@ -1,33 +1,44 @@
 ﻿using System;
+using System.Reflection;
 using Couchbase.Lite.Util;
 using log4net;
 
 namespace CouchbaseLite1
 {
-    internal class Log4NetLogger : ILogger
+    public class Log4NetLogger : ILogger
     {
         private readonly ILog log;
 
         public Log4NetLogger()
         {
-            log = LogManager.GetLogger("Main");
+            log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         }
 
         public void V(string tag, string msg)
         {
             var message = $"{tag}|{msg}";
-            log.Debug(message);
+            log.Logger.Log(MethodBase.GetCurrentMethod().DeclaringType,
+                           log4net.Core.Level.Verbose,
+                           message,
+                           null);
         }
 
         public void V(string tag, string msg, Exception tr)
         {
             var message = $"{tag}|{msg}";
-            log.Debug(message, tr);
+            log.Logger.Log(MethodBase.GetCurrentMethod().DeclaringType,
+                           log4net.Core.Level.Verbose,
+                           message,
+                           tr);
         }
 
         public void V(string tag, string format, params object[] args)
         {
-            log.DebugFormat($"{tag}|{format}", args);
+            var message = string.Format($"{tag}|{format}", args);
+            log.Logger.Log(MethodBase.GetCurrentMethod().DeclaringType,
+                           log4net.Core.Level.Verbose,
+                           message,
+                           null);
         }
 
         public void D(string tag, string msg)

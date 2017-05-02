@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -15,7 +14,7 @@ namespace CouchbaseLite1
     class Program
     {
         private const string DbName = "app1";
-        private const ushort DbPort = 59840;
+        private const ushort DbPort = 59841;
 
         private static Manager manager;
         private static Database db;
@@ -24,13 +23,9 @@ namespace CouchbaseLite1
         {
             SetupLogger();
 
-/*
-            var directoryPath = $"D:\\{Process.GetCurrentProcess().ProcessName}";
             manager = new Manager(
-                Directory.CreateDirectory(directoryPath),
+                Directory.CreateDirectory("D:\\CouchbaseLite"),
                 ManagerOptions.Default);
-*/
-            manager = Manager.SharedInstance;
 
             db = manager.GetDatabase(DbName);
 
@@ -52,7 +47,7 @@ namespace CouchbaseLite1
 
             //Log.Level = Log.LogLevel.Debug;
             //Log.Domains.All.Level = Log.LogLevel.Debug;
-            Log.Domains.Router.Level = Log.LogLevel.Debug;
+            Log.Domains.Router.Level = Log.LogLevel.Verbose;
         }
 
         private static void HandleCommands(CancellationTokenSource shutdownTokenSource)
@@ -84,6 +79,7 @@ namespace CouchbaseLite1
         {
             var sb = new StringBuilder("Documents:" + Environment.NewLine);
             var allDocumentsQuery = db.CreateAllDocumentsQuery();
+            allDocumentsQuery.AllDocsMode = AllDocsMode.BySequence;
             var rows = allDocumentsQuery.Run();
 
             var count = 0;
